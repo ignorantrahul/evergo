@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -21,6 +22,7 @@
 #define UFS_ANY_VENDOR 0xFFFF
 #define UFS_ANY_MODEL  "ANY_MODEL"
 
+#define UFS_VENDOR_MICRON      0x12C
 #define UFS_VENDOR_TOSHIBA     0x198
 #define UFS_VENDOR_SAMSUNG     0x1CE
 #define UFS_VENDOR_SKHYNIX     0x1AD
@@ -130,5 +132,27 @@ struct ufs_dev_fix {
  * PA_SaveConfigTime to >32us as per vendor recommendation.
  */
 #define UFS_DEVICE_QUIRK_HOST_PA_SAVECONFIGTIME	(1 << 8)
+
+/*
+ * MTK PATCH
+ * Some UFS device need 5ms delay in VCC off. In order to wait VCC discharged
+ * to 0V. Some device may have issue when VCC is not discharged to 0V
+ * and power up.
+ */
+#define UFS_DEVICE_QUIRK_VCC_OFF_DELAY	(1 << 29)
+
+/*
+ * MTK PATCH
+ * Some UFS memory device needs limited RPMB max rw size otherwise
+ * device issue, for example, device hang, may happen in some scenarios.
+ */
+#define UFS_DEVICE_QUIRK_LIMITED_RPMB_MAX_RW_SIZE	(1 << 30)
+
+/*
+ * MTK PATCH
+ * Some UFS device writebooster cannot flush.
+ * To fix this problem, Toggle fWriteBoosterEn instead.
+ */
+#define UFS_DEVICE_QUIRK_WRITE_BOOSETER_FLUSH	(1 << 31)
 
 #endif /* UFS_QUIRKS_H_ */
