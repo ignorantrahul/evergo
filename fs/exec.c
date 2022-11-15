@@ -72,6 +72,8 @@
 
 #include <trace/events/sched.h>
 
+#include <mt-plat/mtk_pidmap.h>
+
 int suid_dumpable = 0;
 
 static LIST_HEAD(formats);
@@ -311,7 +313,7 @@ static int __bprm_mm_init(struct linux_binprm *bprm)
 	vma->vm_start = vma->vm_end - PAGE_SIZE;
 	vma->vm_flags = VM_SOFTDIRTY | VM_STACK_FLAGS | VM_STACK_INCOMPLETE_SETUP;
 	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
-	INIT_LIST_HEAD(&vma->anon_vma_chain);
+	INIT_VMA(vma);
 
 	err = insert_vm_struct(mm, vma);
 	if (err)
@@ -965,9 +967,9 @@ int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
 		return -EINVAL;
 
 	file = filp_open(path, O_RDONLY, 0);
-	if (IS_ERR(file))
+	if (IS_ERR(file)){
 		return PTR_ERR(file);
-
+	}
 	ret = kernel_read_file(file, buf, size, max_size, id);
 	fput(file);
 	return ret;
@@ -1237,6 +1239,7 @@ void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
 	strlcpy(tsk->comm, buf, sizeof(tsk->comm));
 	task_unlock(tsk);
 	perf_event_comm(tsk, exec);
+	mtk_pidmap_update(tsk);
 }
 
 /*
