@@ -610,4 +610,22 @@ config CHARGER_RT9455
 	help
 	  Say Y to enable support for Richtek RT9455 battery charger.
 
+config CUSTOM_BATTERY_EXTERNAL_CHANNEL
+	bool "customer external gauge test"
+	help
+	  This config is for internal testing only.
+	  If not required, select n
+	  Say Y to enable support for Customer external gauge.
+	  if unsure ,choose n.
+
+config MTK_DISABLE_TEMP_PROTECT
+        bool "control of TEMP protect"
+        default n
+        help
+          Say Y here to enable a function which disabled TEMP protect...
+          WARNNING:Only SCM could open it.
+
+source "drivers/power/supply/mediatek/battery/Kconfig"
+source "drivers/power/supply/mediatek/charger/Kconfig"
+
 endif # POWER_SUPPLY
