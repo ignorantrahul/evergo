@@ -183,6 +183,7 @@ static int parse_audio_format_rates_v1(struct snd_usb_audio *chip, struct audiof
 		fp->rate_min = fp->rate_max = 0;
 		for (r = 0, idx = offset + 1; r < nr_rates; r++, idx += 3) {
 			unsigned int rate = combine_triple(&fmt[idx]);
+			struct usb_device *udev = chip->dev;
 			if (!rate)
 				continue;
 			/* C-Media CM6501 mislabels its 96 kHz altsetting */
@@ -434,7 +435,7 @@ static int parse_audio_format_i(struct snd_usb_audio *chip,
 		switch (chip->usb_id) {
 
 		case USB_ID(0x0763, 0x2003): /* M-Audio Audiophile USB */
-			if (chip->setup == 0x00 && 
+			if (chip->setup == 0x00 &&
 			    fp->altsetting == 6)
 				pcm_format = SNDRV_PCM_FORMAT_S16_BE;
 			else
